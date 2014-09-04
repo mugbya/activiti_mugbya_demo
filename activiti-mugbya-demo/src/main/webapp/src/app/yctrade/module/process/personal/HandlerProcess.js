@@ -49,6 +49,7 @@ Ext.define("YCTrade.module.process.personal.HandlerProcess",{
 
                         //传入的三个参数可以自己进行调试，其中有当前点击该行的record
                         var taskid = rec.id;
+                        var assignee = rec.data.assignee;
                         var store = this.store;
 
                         Ext.defer(function() {
@@ -60,7 +61,8 @@ Ext.define("YCTrade.module.process.personal.HandlerProcess",{
                                     Ext.Ajax.request({
                                         url: 'process/handler.json',
                                         params: {
-                                            taskId: taskid
+                                            taskId: taskid,
+                                            userId : assignee
                                         },
                                         success: function(response){
                                             store.reload();

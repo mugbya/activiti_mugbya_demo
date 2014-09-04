@@ -34,10 +34,13 @@ public class ProcessServiceImpl implements ProcessService {
     @Override
     public List<UserTask> taskList(Dto dto) {
 
-        List<Task> tasks = processEngineCore.taskList("activitiDemo");
+        /**
+         * 这里还是查询所有的任务，没有用当前用户来查询旗下的任务
+         */
+        List<Task> tasks = processEngineCore.taskList("activitiDemo_v2");
 
         for (Task task : tasks){
-            UserTask userTask = new UserTask(task.getId(), "oo", "未指定");
+            UserTask userTask = new UserTask(task.getId(), "oo", task.getAssignee());
             userTaskList.add(userTask);
         }
 
@@ -45,12 +48,12 @@ public class ProcessServiceImpl implements ProcessService {
     }
 
     @Override
-    public void haldlerTask(String taskId) {
+    public void haldlerTask(String taskId, String userId) {
 
         /**
          * 处理任务,因为将任务进行封装，所以在处理完，还需手动去移除任务
          */
-        processEngineCore.handlerTask(taskId);
+        processEngineCore.handlerUserTask(taskId, userId);
 
 
         /**

@@ -8,9 +8,7 @@ import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author mugbya
@@ -39,17 +37,13 @@ public class MyProcessTest_Simple_v1 {
     }
 
 
-
-
     // 部署流程实例
     public void deploymentInstance(ClassPathXmlApplicationContext applicationContext) {
         // 获得repositoryService
         RepositoryService repositoryService = (RepositoryService) applicationContext.getBean("repositoryService");
         // 从文件部署流程
-        Deployment deployment = repositoryService.createDeployment().addClasspathResource("activitiDemo.bpmn20.xml").deploy();
+        Deployment deployment = repositoryService.createDeployment().addClasspathResource("activitiDemo_v1.bpmn20.xml").deploy();
         System.out.println("部署的Id  = " + deployment.getId());
-
-
     }
 
     // 启动流程
@@ -57,11 +51,10 @@ public class MyProcessTest_Simple_v1 {
         // 获得 runtimeservice对象
         RuntimeService runtimeService = (RuntimeService) applicationContext.getBean("runtimeService");
 
-        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("activitiDemo");
+        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("activitiDemo_v1");
 
         System.out.println( "key =    "+processInstance.getBusinessKey());
         System.out.println( "进程实例ID =    "+processInstance.getProcessInstanceId());
-
     }
 
 
@@ -70,10 +63,9 @@ public class MyProcessTest_Simple_v1 {
         // 获得TaskService对象
         TaskService taskService = (TaskService) applicationContext.getBean("taskService");
 
-        List<Task> taskList = taskService.createTaskQuery().processDefinitionKey("activitiDemo").list();
+        List<Task> taskList = taskService.createTaskQuery().processDefinitionKey("activitiDemo_v1").list();
         System.out.println("任务列表----- " + taskList.size());
         taskService.complete(taskList.get(0).getId());
-
     }
 
 }

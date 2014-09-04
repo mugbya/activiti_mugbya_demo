@@ -22,7 +22,7 @@ public class ProcessController extends CommonController{
 
     @RequestMapping(value = "process/start.json")
     public void startProcess(){
-        processService.startProcess("activitiDemo");
+        processService.startProcess("activitiDemo_v2");
     }
 
     @RequestMapping(value = "process/tasklist.json")
@@ -34,8 +34,8 @@ public class ProcessController extends CommonController{
     }
 
     @RequestMapping(value = "process/handler.json")
-    public void handlerTask(String taskId){
-        processService.haldlerTask(taskId);
+    public void handlerTask(String taskId, String userId){
+        processService.haldlerTask(taskId,userId);
     }
 
 }

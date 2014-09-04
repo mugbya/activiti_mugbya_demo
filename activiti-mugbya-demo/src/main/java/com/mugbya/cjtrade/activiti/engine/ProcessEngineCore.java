@@ -20,8 +20,7 @@ import java.util.Map;
 /**
  * @author mugbya
  * @version 2014-08-22.
- *          <p/>
- *          流程引擎核心类
+ *  流程引擎核心类
  */
 @Service("processEngineCore")
 public class ProcessEngineCore {
@@ -42,93 +41,23 @@ public class ProcessEngineCore {
      * 部署流程
      */
     public void deploymentInstance() {
-        Deployment deployment = repositoryService.createDeployment().addClasspathResource("activitiDemo.bpmn20.xml").deploy();
-        System.out.println("process deployment success & processID is " + deployment.getId() +
-                ",createTime is " + deployment.getDeploymentTime());
-    }
-
-    /**
-     * 根据任务ID获取流程定义
-     *
-     * @param taskId 任务ID
-     * @return
-     * @throws Exception
-     */
-    public ProcessDefinitionEntity findProcessDefinitionEntityByTaskId(String taskId) throws Exception {
-        // 取得流程定义
-        ProcessDefinitionEntity processDefinition = (ProcessDefinitionEntity) ((RepositoryServiceImpl) repositoryService).getDeployedProcessDefinition(findTaskById(taskId).getProcessDefinitionId());
-
-        if (processDefinition == null) {
-            throw new Exception("流程定义未找到!");
-        }
-
-        return processDefinition;
+        Deployment deployment = repositoryService.createDeployment().addClasspathResource("activitiDemo_v1.bpmn20.xml").deploy();
     }
 
 
     /**
-     * 根据任务ID获得任务实例
-     *
-     * @param taskId 任务ID
-     * @return
-     * @throws Exception
-     */
-    private TaskEntity findTaskById(String taskId) throws Exception {
-        TaskEntity task = (TaskEntity) taskService.createTaskQuery().taskId(taskId).singleResult();
-        if (task == null) {
-            throw new Exception("任务实例未找到!");
-        }
-        return task;
-    }
-
-    /**
-     * 启动流程实例
-     *
-     * @param processInstanceByKey 流程部署KEY
-     * @param proMap               流程变量
-     */
-    public ProcessInstance startInstance(String processInstanceByKey, String businessKey, Map<String, Object> proMap) {
-        ProcessInstance processInstance = null;
-        if (proMap != null) {
-            processInstance = runtimeService.startProcessInstanceByKey(processInstanceByKey, businessKey, proMap);
-        } else {
-            processInstance = runtimeService.startProcessInstanceByKey(processInstanceByKey);
-        }
-        System.out.println("process start success  key [" + processInstance.getBusinessKey() + "]" + processInstance.getId());
-        return processInstance;
-    }
-
-    /**
-     * 重载流程启动
-     *
+     * 流程启动
      * @param processInstanceByKey
      * @return
      */
     public ProcessInstance startInstance(String processInstanceByKey) {
-        ProcessInstance processInstance = null;
 
-        processInstance = runtimeService.startProcessInstanceByKey(processInstanceByKey);
+        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processInstanceByKey);
 
         System.out.println("process start success  key [" + processInstance.getId() + "]" );
         return processInstance;
     }
 
-
-    /**
-     * 根据任务ID获取对应的流程实例
-     *
-     * @param taskId 任务ID
-     * @return
-     * @throws Exception
-     */
-    public ProcessInstance findProcessInstanceByTaskId(String taskId) throws Exception {
-        // 找到流程实例
-        ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(findTaskById(taskId).getProcessInstanceId()).singleResult();
-        if (processInstance == null) {
-            throw new Exception("流程实例未找到!");
-        }
-        return processInstance;
-    }
 
 
     /**
@@ -143,7 +72,7 @@ public class ProcessEngineCore {
     }
 
     /**
-     * 回去同名（key）下的所有任务
+     * 同名（key）下的所有任务
      * @param key
      * @return
      */
@@ -184,13 +113,13 @@ public class ProcessEngineCore {
      * @param userId
      */
     public void handlerUserTask(String taskId, String userId) {
-//        taskService.claim(taskId,userId);
-//        taskService.complete(taskId);
 
-        List<Task> tasks = taskService.createTaskQuery().taskAssignee("oo").list();
+        List<Task> tasks = taskService.createTaskQuery().taskAssignee(userId).list();
 
         for (Task task : tasks) {
-            taskService.complete(task.getId());
+            if (taskId.equals(task.getId())){
+                taskService.complete(task.getId());
+            }
         }
 
     }

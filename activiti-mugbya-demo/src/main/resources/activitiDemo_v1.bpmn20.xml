@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/processdef">
-  <process id="activitiDemo" name="activiti_Demo" isExecutable="true">
+  <process id="activitiDemo_v1" name="activiti_Demo" isExecutable="true">
     <startEvent id="start" name="开始"/>
     <userTask id="task" name="task任务哦0_0" />
     <endEvent id="end" name="结束"/>
@@ -8,7 +8,7 @@
     <sequenceFlow id="flow2" sourceRef="task" targetRef="end"/>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_activitiDemo">
-    <bpmndi:BPMNPlane bpmnElement="activitiDemo" id="BPMNPlane_activitiDemo">
+    <bpmndi:BPMNPlane bpmnElement="activitiDemo_v1" id="BPMNPlane_activitiDemo_v1">
       <bpmndi:BPMNShape bpmnElement="start" id="BPMNShape_start">
         <omgdc:Bounds height="30.0" width="30.0" x="180.0" y="131.0"/>
       </bpmndi:BPMNShape>
