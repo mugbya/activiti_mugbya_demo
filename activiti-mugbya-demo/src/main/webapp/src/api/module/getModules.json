@@ -1,0 +1,19 @@
+{
+    data: 
+    [
+
+//    {text: "系统用户管理维护", leaf: true, isModule: true, id: "YCTrade.module.user.UserManager"},
+//    {text: "会员管理维护", leaf: true,isModule: true, id: "YCTrade.module.member.MemberManager"},
+//    {text: "产品管理维护",leaf: true,isModule: true,id: "YCTrade.module.product.ProductManager"},
+//    {text: "产品类别管理维护",leaf: true,isModule: true,id:"YCTrade.module.productType.ProductTypeManager"},
+//    {text: "部门信息管理",leaf: true,isModule: true,id: "YCTrade.module.dept.DeptManager"},
+//    {text: "角色信息管理",leaf: true,isModule: true,id: "YCTrade.module.role.RoleManager"},
+//    {text: "会员账户管理",leaf: true,isModule: true,id: "YCTrade.module.memberDetail.MemberDetailsManager"},
+//    {text: "交易所账户",leaf:true,isModule:true,id:"YCTrade.module.cjaccount.CjaccountManager"}
+
+//      {text: "流程发布",leaf:true,isModule:true,id:"YCTrade.module.process.deployment.DeploymentManager"}
+        {text: "会员申请",leaf:true,isModule:true,id:"YCTrade.module.process.start.StartProcess"},
+        {text: "个人代办",leaf:true,isModule:true,id:"YCTrade.module.process.personal.HandlerProcess"}
+    ]
+
+}

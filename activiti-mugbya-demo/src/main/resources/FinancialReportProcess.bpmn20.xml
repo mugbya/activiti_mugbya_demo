@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
+	<process id="financialReport" name="每月财务报告处理流程">
+		<startEvent id="theStart" />
+
+		<sequenceFlow id='flow1' sourceRef='theStart' targetRef='writeReportTask' />
+
+		<userTask id="writeReportTask" name="撰写财务报告">
+			<documentation>
+				撰写要发送给公司股东的每月财务报告。
+    	</documentation>
+			<potentialOwner>
+				<resourceAssignmentExpression>
+					<formalExpression>accountancy</formalExpression>
+				</resourceAssignmentExpression>
+			</potentialOwner>
+		</userTask>
+
+		<sequenceFlow id='flow2' sourceRef='writeReportTask' targetRef='verifyReportTask' />
+
+		<userTask id="verifyReportTask" name="批准财务报告">
+			<documentation>
+				核实并批准会计部门提交的每月财务报告，报告将发送给公司的所有股东们。  
+    </documentation>
+			<potentialOwner>
+				<resourceAssignmentExpression>
+					<formalExpression>management</formalExpression>
+				</resourceAssignmentExpression>
+			</potentialOwner>
+		</userTask>
+
+		<sequenceFlow id='flow3' sourceRef='verifyReportTask' targetRef='theEnd' />
+
+		<endEvent id="theEnd" />
+
+	</process>
+</definitions>
