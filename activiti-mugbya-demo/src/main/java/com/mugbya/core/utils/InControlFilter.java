@@ -17,7 +17,7 @@ public class InControlFilter implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         System.out.println("拦截器--->执行顺序 1---->preHandle方法");
         System.out.println(request.getRequestURL().toString());
-        User user = WebUtil.getlogonAccount(request);
+        User user = WebUtil.getLoginUser(request);
         if (user !=null){
             //已经登陆
             request.getRequestDispatcher("/WEB-INF/page/main.jsp").forward(request,response);

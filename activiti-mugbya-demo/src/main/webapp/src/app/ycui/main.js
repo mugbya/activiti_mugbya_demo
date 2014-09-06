@@ -16,7 +16,7 @@ Ext.application({
          * 启动主界面
          */
         Ext.create('YCUI.main.MainPanel', {
-            title: '四川金融资产交易所 - 业务管理系统'
+            title: '工作流 - activiti学习'
         });
     },
     launch: function () {

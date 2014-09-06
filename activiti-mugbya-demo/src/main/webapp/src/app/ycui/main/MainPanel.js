@@ -27,13 +27,27 @@ Ext.define('YCUI.main.MainPanel', {
             region: 'center'
         });
 
+
         Ext.applyIf(this, {
             items: [{
                 region: 'north',
-                xtype: 'component',
+                xtype: 'panel',
                 padding: 10,
-                height: 40,
-                html: this.title
+                height: 55,
+//                html: this.title,
+                tbar:[{text:'工作流 - activiti 学习', xtype:'label'},
+                    '->',{
+                    text:'退出',
+                    handler:function(){
+                        Ext.Ajax.request({
+                            url: '/user/destory.json',
+                            success: function (response) {
+                                window.location.href="/login.jsp";
+                            }
+                        });
+                    }
+                }]
+
             }, this.navigatorPanel, this.workspacePanel]
         });
 

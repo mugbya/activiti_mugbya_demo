@@ -12,8 +12,13 @@ import javax.servlet.http.HttpServletRequest;
 public class WebUtil {
 
     //拿到登陆用户
-    public static User getlogonAccount(HttpServletRequest request) {
+    public static User getLoginUser(HttpServletRequest request) {
         return (User) request.getSession().getAttribute("loginuser");
+    }
+
+    //删除session
+    public static void destorySession(HttpServletRequest request){
+        request.getSession().removeAttribute("loginUser");
     }
 
 }

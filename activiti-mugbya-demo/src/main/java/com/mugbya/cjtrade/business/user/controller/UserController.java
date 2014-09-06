@@ -5,12 +5,14 @@ import com.mugbya.cjtrade.business.user.service.UserService;
 import com.mugbya.core.collection.BaseDto;
 import com.mugbya.core.collection.Dto;
 import com.mugbya.core.common.CommonController;
+import com.mugbya.core.utils.WebUtil;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -31,11 +33,18 @@ public class UserController extends CommonController {
                 return "false";
             }
             request.getSession().setAttribute("loginuser", user);
+            System.out.println("当前登陆用户是：" + user.getUsername());
             return "true";
         } catch (Exception e) {
             System.out.println(e);
         }
         return "false";
+    }
+
+    @RequestMapping(value = "/user/destory.json")
+    public String destorySession(HttpServletRequest request) throws IOException {
+        WebUtil.destorySession(request);
+        return "true";
     }
 
     @RequestMapping(value = "/user/all.json")

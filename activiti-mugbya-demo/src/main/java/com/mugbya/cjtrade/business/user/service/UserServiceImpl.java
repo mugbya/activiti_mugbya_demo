@@ -20,7 +20,9 @@ public class UserServiceImpl implements UserService {
 
     public UserServiceImpl() {
         User user = new User("00","oo","oo");
+        User user1 = new User("11","mugbya","mugbya");
         userList.add(user);
+        userList.add(user1);
     }
 
     @Override
@@ -39,10 +41,11 @@ public class UserServiceImpl implements UserService {
     @Test
     @Override
     public User checkUser(String username, String userpassword) {
-        User user = userList.get(0);
 
-        if (username.equals(user.getUsername()) && userpassword.equals(user.getUserpassword())  ){
-            return user;
+        for(User user : userList){
+            if (username.equals(user.getUsername()) && userpassword.equals(user.getUserpassword())){
+                return user;
+            }
         }
         return null;
     }

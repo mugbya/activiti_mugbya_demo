@@ -44,21 +44,37 @@ public class ProcessEngineCore {
         Deployment deployment = repositoryService.createDeployment().addClasspathResource("activitiDemo_v1.bpmn20.xml").deploy();
     }
 
-
     /**
      * 流程启动
      * @param processInstanceByKey
      * @return
      */
     public ProcessInstance startInstance(String processInstanceByKey) {
-
         ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processInstanceByKey);
-
         System.out.println("process start success  key [" + processInstance.getId() + "]" );
         return processInstance;
     }
 
+    /**
+     * 流程启动 增加流程变量
+     * @param processInstanceByKey
+     * @param variables
+     * @return
+     */
+    public ProcessInstance startInstance(String processInstanceByKey, Map<String,Object> variables) {
+        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processInstanceByKey,variables);
+        System.out.println("process start success  key [" + processInstance.getId() + "]" );
+        return processInstance;
+    }
 
+    /**
+     * 获取流程申请者
+     * @param taskId
+     * @return
+     */
+    public Object getApplyUser(String  taskId){
+        return  taskService.getVariable(taskId,"applyUser");      
+    }
 
     /**
      * 根据executionId查询task
@@ -94,14 +110,14 @@ public class ProcessEngineCore {
 
 
     /**
-     * 查询UserTask列表
-     *
+     * 查询指定人的用户列表
      * @param userName
      * @return
      */
     public List<Task> queryUserTaskList(String userName) {
         // 查询当前用户任务列表
         List<Task> taskList = taskService.createTaskQuery().taskAssignee(userName).list();
+        System.out.println("当前用户的任务个数" + taskList.size());
         return taskList;
     }
 

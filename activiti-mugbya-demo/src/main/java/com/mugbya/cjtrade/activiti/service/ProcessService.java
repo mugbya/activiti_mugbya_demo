@@ -4,6 +4,7 @@ import com.mugbya.cjtrade.activiti.entity.UserTask;
 import com.mugbya.core.collection.Dto;
 import org.activiti.engine.task.Task;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -14,9 +15,11 @@ import java.util.List;
  */
 public interface ProcessService {
 
-    void startProcess(String key);
+    void startProcess(String key,HttpServletRequest request);
 
     List<UserTask> taskList(Dto dto);
+
+    List<UserTask> UsertaskList(Dto dto, HttpServletRequest request);
 
     void haldlerTask(String taskId, String userId);
 

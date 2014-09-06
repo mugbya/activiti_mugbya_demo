@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author mugbya
@@ -21,15 +22,19 @@ public class ProcessController extends CommonController{
 
 
     @RequestMapping(value = "process/start.json")
-    public void startProcess(){
-        processService.startProcess("activitiDemo_v2");
+    public void startProcess(HttpServletRequest request){
+        processService.startProcess("activitiDemo_v2",request);
     }
 
+    /**
+     * 得到当前登陆用户任务列表
+     * @return
+     */
     @RequestMapping(value = "process/tasklist.json")
-    public Object tasklist(){
+    public Object tasklist(HttpServletRequest request){
         Dto params = new BaseDto();
-
-        return success(processService.taskList(params));
+        return success(processService.UsertaskList(params,request));
+//        return success(processService.taskList(params));
 
     }
 
