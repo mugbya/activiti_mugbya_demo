@@ -2,18 +2,19 @@ package com.mugbya.cjtrade.business.member.service;
 
 
 import com.mugbya.cjtrade.activiti.engine.ProcessEngineCore;
-import com.mugbya.cjtrade.activiti.entity.UserTask;
 import com.mugbya.cjtrade.business.member.dao.MemberDao;
 import com.mugbya.cjtrade.business.member.model.Member;
 import com.mugbya.core.collection.Dto;
-import org.activiti.engine.TaskService;
+import com.mugbya.core.utils.WebUtil;
+import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
+import org.junit.Test;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author mugbya
@@ -22,107 +23,101 @@ import java.util.List;
 @Service("memberService")
 public class MemberServiceImpl implements MemberService {
 
-    //    @Resource
-//    private MemberDao memberDao;
     @Resource
-    private TaskService taskService;
+    private MemberDao memberDao;
+
+    static Integer memberid = 0;
+
+    List<Member> memberList = new ArrayList<>();
 
     @Resource
     private ProcessEngineCore processEngineCore;
 
-    private List<Member> memberList = new ArrayList<>();
-    private List<UserTask> userTaskList = new ArrayList<>();
-
-    public MemberServiceImpl() {
-        Member member = new Member("009991", "什么", "0011", "898@7878.com", "122334234");
-        memberList.add(member);
-    }
-
     @Override
-    public void save(Member member) {
-//        member.setMemberid("00555");
-//        memberDao.save(member);
-        memberList.add(member);
-    }
-
-    @Override
-    public List<UserTask> taskAll(Dto dto) {
-//        List<Task> taskList = taskService.createTaskQuery().taskAssignee("mugbya").list();
-//
-//        for (Task task : taskList) {
-////            taskService.claim(task2.getId(), "mugbya");
-////            System.out.println("任务名称:" + task2.getName());
-//            UserTask userTask = new UserTask();
-//            userTask.setID(task.getId());
-//            userTask.setUsername("oo"); // 提交人呢
-//            userTask.setAssignee("oo"); // 处理人
-//            userTaskList.add(userTask);
-//            System.out.println(task);
-//        }
-
-        List<Task> taskList = taskService.createTaskQuery().processDefinitionKey("activitiDemo").list();
-        for(Task task : taskList){
-            UserTask userTask = new UserTask();
-            System.out.println("任务的ID ========" + task.getId() + task.getId().getClass());
-            userTask.setID(task.getId());
-            userTask.setUsername("oo"); // 提交人呢
-            userTask.setAssignee("未设置"); // 处理人
-            userTaskList.add(userTask);
-            System.out.println(task);
+    public void start(Member member, Map<String,Object> variables) {
+        member.setMemberid(setMemberId());
+        try {
+            memberDao.save(member);
+            processEngineCore.startInstance("activitiDemo_v3",member.getMemberid(),variables);
+        }catch (Exception e){
+            System.out.println("异常 : " + e);
         }
-        return userTaskList;
+
+
+    }
+
+    /**
+     * 查询代办任务
+     * @param dto
+     * @param request
+     * @return
+     */
+    @Override
+    public List<Member> UsertaskList(Dto dto, HttpServletRequest request) {
+        List<Member> members = new ArrayList<>();
+
+        String userId = WebUtil.getLoginUser(request).getUsername();
+        // 根据当前人的ID查询代办任务
+        List<Task> taskList = processEngineCore.queryTaskList(userId);
+        System.out.println("任务列表长度是 : " + taskList.size());
+
+        // 根据流程的业务ID查询实体并关联
+        for (Task task : taskList){
+//            String processInstanceId = task.getProcessInstanceId();
+//            ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId).active().singleResult();
+//            String businessKey = processInstance.getBusinessKey();
+            ProcessInstance processInstance = processEngineCore.queryProcessInstance(task.getProcessInstanceId());
+            String   businessKey = processInstance.getBusinessKey();
+            String applyUser = processEngineCore.getApplyUser(task.getId()).toString();
+
+            if (businessKey == null) {
+                continue;
+            }
+            Member member = getMember(businessKey);
+
+            member.setApplyUser(applyUser);
+            member.setAssignee(task.getAssignee());
+            member.setTaskId(task.getId());
+            members.add(member);
+        }
+
+        return members;
     }
 
     @Override
-    public void handlerUserTask(String taskId) {
+    public void handlerTask(String taskId, String userId) {
+        processEngineCore.handlerUserTask(taskId,userId);
+    }
 
-//        processEngineCore.handlerUserTask(taskId,"oo");
-
-        List<Task> taskList = taskService.createTaskQuery().processDefinitionKey("activitiDemo").list();
-        System.out.println("任务列表----- " + taskList.size());
-//        taskService.complete(taskList.get(0).getId());
-
-        taskService.complete(taskId);
-
-        UserTask userTask = new UserTask();
-        userTask.setID(taskId);
-        System.out.println(userTask);
-        memberList.remove(userTask);
-        System.out.println(memberList.size());
+    @Override
+    public void saveMember(Member member) {
 
     }
 
-    //    @Override
-//    public Member getMemberById(String memberid) {
-//        return memberDao.getMemberById(memberid);
-//    }
-//
-//    @Override
-//    public Member getMemberByName(String membername) {
-//        return memberDao.getMemberByName(membername);
-//    }
-//
-//    @Override
-//    public List<Member> getAll(Dto dto) {
-//        return memberDao.getAll(dto);
-//    }
-//
-//    @Override
-//    @Transactional()
-//    public void delete(String memberid) {
-//        memberDao.delete(memberid);
-//    }
-//
-//    @Override
-//    @Transactional()
-//    public void update(Member member) {
-//        memberDao.update(member);
-//    }
-//
-//    @Override
-//    public boolean delRoleAndPermission(String memberid) {
-//        memberDao.delRole(memberid);
-//        memberDao.delPermission(memberid);
-//        return true;
-//    }
+    public  String  setMemberId(){
+        memberid += 1;
+        return memberid.toString();
+    }
+
+    @Override
+    public Member getMember(String memberId) {
+
+        Member member = memberDao.getMemberById(memberId);
+
+        System.out.println("查到的member " + member);
+
+        // 数据库还有这个问题？？？
+        member.setMemberid(member.getMemberid().trim());
+        member.setMembername(member.getMembername().trim());
+        member.setMemberemail(member.getMemberemail().trim());
+        member.setMemberphone(member.getMemberphone().trim());
+
+        return member;
+    }
+
+    @Override
+    public List<Member> getAllMember() {
+//        processEngineCore.
+        return null;
+    }
 }

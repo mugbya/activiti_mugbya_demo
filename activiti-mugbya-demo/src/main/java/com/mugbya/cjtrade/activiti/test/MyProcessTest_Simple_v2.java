@@ -27,13 +27,13 @@ public class MyProcessTest_Simple_v2 {
 
         MyProcessTest_Simple_v2 t = new MyProcessTest_Simple_v2();
 
-        // step 1 部署
+//        // step 1 部署
 //        t.deploymentInstance(applicationContext);
 //        System.out.println("部署完------");
 //
-        // step 2 启动流程实例
-        t.startInstance(applicationContext);
-        System.out.println("启动了--- ");
+//        // step 2 启动流程实例
+//        t.startInstance(applicationContext);
+//        System.out.println("启动了--- ");
 
         // step 3 查看用户任务
         t.queryUserTask(applicationContext);

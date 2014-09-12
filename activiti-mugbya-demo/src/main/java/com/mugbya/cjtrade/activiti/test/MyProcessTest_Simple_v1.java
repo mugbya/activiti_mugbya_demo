@@ -3,6 +3,7 @@ package com.mugbya.cjtrade.activiti.test;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.impl.persistence.entity.TaskEntity;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
@@ -23,16 +24,16 @@ public class MyProcessTest_Simple_v1 {
         MyProcessTest_Simple_v1 t = new MyProcessTest_Simple_v1();
 
         // step 1 部署
-        t.deploymentInstance(applicationContext);
-        System.out.println("部署完------");
+//        t.deploymentInstance(applicationContext);
+//        System.out.println("部署完------");
 
         //step 2 启动流程实例
         t.startInstance(applicationContext);
         System.out.println("启动了--- ");
 
         // 完成任务
-        t.completePersonalTask(applicationContext);
-        System.out.println("任务完成--- ");
+//        t.completePersonalTask(applicationContext);
+//        System.out.println("任务完成--- ");
 
     }
 
@@ -44,6 +45,8 @@ public class MyProcessTest_Simple_v1 {
         // 从文件部署流程
         Deployment deployment = repositoryService.createDeployment().addClasspathResource("activitiDemo_v1.bpmn20.xml").deploy();
         System.out.println("部署的Id  = " + deployment.getId());
+
+
     }
 
     // 启动流程

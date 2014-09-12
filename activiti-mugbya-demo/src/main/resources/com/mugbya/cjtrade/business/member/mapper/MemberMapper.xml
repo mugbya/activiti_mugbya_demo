@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mugbya.cjtrade.business.member.dao.MemberDao">
+    <cache/>
+    <select id="getMemberById" parameterType="String" resultType="Member">
+        SELECT *
+        FROM oa_member
+        WHERE oa_member.memberid = #{memberid}
+    </select>
+    <insert id="save" parameterType="Member">
+        INSERT INTO oa_member (memberid, membername, deptid, memberemail, memberphone)
+        VALUES (#{memberid}, #{membername}, #{deptid},#{memberemail}, #{memberphone})
+    </insert>
+</mapper>

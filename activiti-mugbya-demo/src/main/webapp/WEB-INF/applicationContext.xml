@@ -41,6 +41,17 @@
           class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
 
 
+    <bean id="sqlSessionFactory" class="com.mugbya.core.common.WildcardSqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="mapperLocations" value="classpath*:com/mugbya/cjtrade/business/*/mapper/*.xml"/>
+        <!--<property name="mapperLocations" value="classpath*:com/mugbya/cjtrade/business/*/dao/*.xml"/>-->
+        <property name="typeAliasesPackage" value="classpath*:com.mugbya.cjtrade.business.*.model"/>
+        <!--<property name="configLocation" value="/WEB-INF/mybatis-config.xml" />-->
+    </bean>
+
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.mugbya.cjtrade.business.member.dao"/>
+    </bean>
 
     <!--开始 -->
     <bean id="processEngineConfiguration" class="org.activiti.spring.SpringProcessEngineConfiguration">

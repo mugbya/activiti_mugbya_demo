@@ -59,7 +59,8 @@ Ext.define("YCTrade.module.process.start.StartProcess",{
 
     saveMember : function () {
         this.form.form.submit({
-            url: 'process/start.json',
+            //url: 'process/start.json',
+            url : 'member/start.json',
             waitTitle: '提示',
             method: 'POST',
             waitMsg: '正在处理数据,请稍候...',

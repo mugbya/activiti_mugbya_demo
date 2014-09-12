@@ -4,6 +4,7 @@
     <startEvent id="start" name="开始"/>
     <userTask id="task" name="task任务哦0_0" />
     <endEvent id="end" name="结束"/>
+
     <sequenceFlow id="flow1" sourceRef="start" targetRef="task"/>
     <sequenceFlow id="flow2" sourceRef="task" targetRef="end"/>
   </process>

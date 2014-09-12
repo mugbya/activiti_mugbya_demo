@@ -20,10 +20,9 @@ public class ProcessController extends CommonController{
     @Resource
     private ProcessService processService;
 
-
     @RequestMapping(value = "process/start.json")
     public void startProcess(HttpServletRequest request){
-        processService.startProcess("activitiDemo_v2",request);
+        processService.startProcess("activitiDemo_v3",request);
     }
 
     /**
@@ -35,7 +34,6 @@ public class ProcessController extends CommonController{
         Dto params = new BaseDto();
         return success(processService.UsertaskList(params,request));
 //        return success(processService.taskList(params));
-
     }
 
     @RequestMapping(value = "process/handler.json")

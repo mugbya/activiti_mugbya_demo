@@ -19,7 +19,7 @@ public class UserServiceImpl implements UserService {
     List<User> userList = new ArrayList<>();
 
     public UserServiceImpl() {
-        User user = new User("00","oo","oo");
+        User user = new User("00","yeats","yeats");
         User user1 = new User("11","mugbya","mugbya");
         userList.add(user);
         userList.add(user1);

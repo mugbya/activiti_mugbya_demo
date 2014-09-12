@@ -1,29 +1,35 @@
 package com.mugbya.cjtrade.business.member.service;
 
 
-import com.mugbya.cjtrade.activiti.entity.UserTask;
 import com.mugbya.cjtrade.business.member.model.Member;
 import com.mugbya.core.collection.Dto;
 import org.activiti.engine.task.Task;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author mugbya
  * @version 2014-07-22.
  */
 public interface MemberService {
-    void save(Member member);
 
-//    Member getMemberById(String memberid);
-//
-//    Member getMemberByName(String membername);
-//
-//    List<Member> getAll(Dto dto);
+    void start(Member member,Map<String,Object> variables);
 
-    // 获取所有任务，不因该写在这里
-    List<UserTask> taskAll(Dto dto);
+    void saveMember(Member member);
 
-    //处理任务
-    void handlerUserTask(String taskId);
+    /**
+     * 返回给定id的member
+     * @param memberId
+     * @return
+     */
+    Member getMember(String memberId);
+
+    List<Member> getAllMember();
+
+    List<Member> UsertaskList(Dto dto, HttpServletRequest request);
+
+    void handlerTask(String taskId, String userId);
+
 }

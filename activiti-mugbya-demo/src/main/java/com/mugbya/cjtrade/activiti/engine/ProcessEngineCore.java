@@ -68,23 +68,34 @@ public class ProcessEngineCore {
     }
 
     /**
+     * 增加业务
+     * @param processInstanceByKey
+     * @param businessKey
+     * @param variables
+     * @return
+     */
+    public ProcessInstance startInstance(String processInstanceByKey,  String businessKey, Map<String,Object> variables) {
+        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processInstanceByKey, businessKey, variables);
+        System.out.println("业务ID是  =  [" + processInstance.getBusinessKey() + "]" );
+        return processInstance;
+    }
+
+    /**
+     * 得到流程实例
+     * @param processInstanceId
+     * @return
+     */
+    public ProcessInstance queryProcessInstance(String processInstanceId){
+        return runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId).active().singleResult();
+    }
+
+    /**
      * 获取流程申请者
      * @param taskId
      * @return
      */
     public Object getApplyUser(String  taskId){
         return  taskService.getVariable(taskId,"applyUser");      
-    }
-
-    /**
-     * 根据executionId查询task
-     *
-     * @param executionId
-     * @return
-     */
-    public List<Task> queryByExecutionId(String executionId) {
-        List<Task> taskList = taskService.createTaskQuery().executionId(executionId).list();
-        return taskList;
     }
 
     /**
@@ -98,18 +109,6 @@ public class ProcessEngineCore {
     }
 
     /**
-     * 根据executionId查询task
-     *
-     * @param executionId
-     * @return
-     */
-    public Task queryByExecutionIdSingle(String executionId) {
-        Task task = taskService.createTaskQuery().executionId(executionId).singleResult();
-        return task;
-    }
-
-
-    /**
      * 查询指定人的用户列表
      * @param userName
      * @return
@@ -121,6 +120,9 @@ public class ProcessEngineCore {
         return taskList;
     }
 
+    public List<Task> queryTaskList(String userId){
+        return taskService.createTaskQuery().taskCandidateOrAssigned(userId).list();
+    }
 
     /**
      * 处理任务
@@ -174,4 +176,13 @@ public class ProcessEngineCore {
         }
         return false;
     }
+
+//    /**
+//     * 得到所有的启动的进程实例
+//     */
+//    public ProcessInstance getAllProcessInstance(){
+//
+//    }
+
+
 }

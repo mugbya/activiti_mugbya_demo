@@ -1,10 +1,15 @@
 package com.mugbya.cjtrade.business.member.model;
 
+import org.activiti.engine.task.Task;
+
 import java.io.Serializable;
 
 /**
  * @author mugbya
  * @version 2014-07-22.
+ *
+ * 除了含有基本的业务信息外，还要含一些流程信息
+ *
  */
 public class Member implements Serializable{
     private String memberid;
@@ -12,6 +17,13 @@ public class Member implements Serializable{
     private String deptid;
     private String memberemail;
     private String memberphone;
+
+    //临时属性,不存数据库
+    private String applyUser;
+    private Task task;
+    private String assignee;
+    private String taskId;
+
 
     public Member() {
     }
@@ -63,6 +75,38 @@ public class Member implements Serializable{
 
     public void setMemberemail(String memberemail) {
         this.memberemail = memberemail;
+    }
+
+    public String getApplyUser() {
+        return applyUser;
+    }
+
+    public void setApplyUser(String applyUser) {
+        this.applyUser = applyUser;
+    }
+
+    public Task getTask() {
+        return task;
+    }
+
+    public void setTask(Task task) {
+        this.task = task;
+    }
+
+    public String getAssignee() {
+        return assignee;
+    }
+
+    public void setAssignee(String assignee) {
+        this.assignee = assignee;
+    }
+
+    public String getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(String taskId) {
+        this.taskId = taskId;
     }
 
     @Override

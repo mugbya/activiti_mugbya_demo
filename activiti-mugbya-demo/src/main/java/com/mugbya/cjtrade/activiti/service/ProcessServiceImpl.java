@@ -88,13 +88,6 @@ public class ProcessServiceImpl implements ProcessService {
         System.out.println("查询任务前，先看是谁 " + loginUser);
         List<Task> tasks = processEngineCore.queryUserTaskList(loginUser);
 
-        System.out.println("------------------------------------------");
-
-        List  oo =  historyService.createHistoricProcessInstanceQuery().startedBy("oo").list();
-
-        System.out.println("oo 的长度  是 "+ oo.size());
-        System.out.println("输出完毕------------");
-
         for (Task task : tasks) {
             String applyUser = processEngineCore.getApplyUser(task.getId()).toString();
             UserTask userTask = new UserTask(task.getId(), applyUser, task.getAssignee());
