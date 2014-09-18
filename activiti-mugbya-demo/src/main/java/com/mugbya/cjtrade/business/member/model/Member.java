@@ -23,7 +23,8 @@ public class Member implements Serializable{
     private Task task;
     private String assignee;
     private String taskId;
-
+    private String taskName;
+    private String reason;
 
     public Member() {
     }
@@ -109,6 +110,22 @@ public class Member implements Serializable{
         this.taskId = taskId;
     }
 
+    public String getTaskName() {
+        return taskName;
+    }
+
+    public void setTaskName(String taskName) {
+        this.taskName = taskName;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+
     @Override
     public String toString() {
         return "Member{" +
@@ -117,6 +134,12 @@ public class Member implements Serializable{
                 ", deptid='" + deptid + '\'' +
                 ", memberemail='" + memberemail + '\'' +
                 ", memberphone='" + memberphone + '\'' +
+                ", applyUser='" + applyUser + '\'' +
+                ", task=" + task +
+                ", assignee='" + assignee + '\'' +
+                ", taskId='" + taskId + '\'' +
+                ", taskName='" + taskName + '\'' +
+                ", reason='" + reason + '\'' +
                 '}';
     }
 }

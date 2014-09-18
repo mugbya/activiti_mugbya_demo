@@ -13,4 +13,13 @@
         INSERT INTO oa_member (memberid, membername, deptid, memberemail, memberphone)
         VALUES (#{memberid}, #{membername}, #{deptid},#{memberemail}, #{memberphone})
     </insert>
+
+
+    <update id="update" parameterType="Member" >
+        UPDATE oa_member
+        SET membername = #{membername}, memberphone = #{memberphone},
+        deptid = #{deptid}, memberemail = #{memberemail}
+        WHERE memberid = #{memberid}
+
+    </update>
 </mapper>

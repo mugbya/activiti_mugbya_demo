@@ -10,6 +10,8 @@ public interface MemberDao {
 
     void save(Member member);
 
+    void update(Member member);
+
     Member getMemberById(String memberid);
 
 }

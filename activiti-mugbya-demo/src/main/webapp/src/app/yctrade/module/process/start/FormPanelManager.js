@@ -1,10 +1,8 @@
 Ext.define('YCTrade.module.process.start.FormPanelManager', {
 	extend: 'Ext.form.FormPanel',
-	id: 'addMemberFormPanel',
-	name: 'addMemberFormPanel',
 	defaultType: 'textfield',
 	labelAlign: 'right',
-	labelWidth: 65,
+	labelWidth: 45,
 //	frame: false,
     border:false,
 	bodyStyle: 'padding:5 5 0',
@@ -14,28 +12,28 @@ Ext.define('YCTrade.module.process.start.FormPanelManager', {
 
 		Ext.applyIf(this, {
 			items: [{
+                    fieldLabel: '会员ID',
+                    labelAlign: 'right',
                     name : 'memberid',
                     hidden : true,
                     allowBlank : true
                 },{
 					fieldLabel: '会员名称',
 					labelAlign: 'right',
-					anchor: '80%',
-					name: 'membername',
-					id: 'membername',
-				}, this.memberdeptCombo,{
+                    anchor    : '100%',
+					name: 'membername'
+				}, this.memberdeptCombo,
+				 {
                     fieldLabel: '会员电话',
                     labelAlign: 'right',
-                    anchor: '80%',
-                    id : 'memberphone',
+                     anchor    : '100%',
                     name : 'memberphone'
                 } ,{
 
 					fieldLabel: '电子邮箱',
 					labelAlign: 'right',
-					anchor: '80%',
-					id: 'memberemail',
-					name: 'memberemail',
+                    anchor    : '100%',
+					name: 'memberemail'
 				}
 			]
 		});
@@ -55,7 +53,7 @@ Ext.define('YCTrade.module.process.start.FormPanelManager', {
 			valueField: "deptname",
 			editable: false,
 			typeAhead: true,
-			anchor: '80%',
+            anchor    : '100%',
 			labelAlign: 'right',
 			//emptyText: '请选择...',
 			triggerAction: 'all',
@@ -72,7 +70,7 @@ Ext.define('YCTrade.module.process.start.FormPanelManager', {
 			valueField: "Id",
 			editable: false,
 			typeAhead: true,
-			anchor: '80%',
+            anchor    : '100%',
 			labelAlign: 'right',
 			//emptyText: '请选择...',
 			triggerAction: 'all',

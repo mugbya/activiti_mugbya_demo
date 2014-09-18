@@ -24,28 +24,28 @@ public class ProcessTest {
 
         ProcessTest t = new ProcessTest();
         // step 1 部署
-        t.deploymentInstance(applicationContext);
-        System.out.println("部署完------");
+//        t.deploymentInstance(applicationContext);
+//        System.out.println("部署完------");
+//
+//        // step 2 启动流程实例
+//        t.startInstance(applicationContext);
+//        System.out.println("启动了--- ");
+//
+//        // step 3 查询用户任务
+//        t.queryUserTask(applicationContext);
+//        System.out.println("查询用户任务--- ");
+//
+//        // step 4 分配任何给user
+//        t.claimTask(applicationContext);
+//        System.out.println("任务分配--- ");
 
-        // step 2 启动流程实例
-        t.startInstance(applicationContext);
-        System.out.println("启动了--- ");
-
-        // step 3 查询用户任务
-        t.queryUserTask(applicationContext);
-        System.out.println("查询用户任务--- ");
-
-        // step 4 分配任何给user
-        t.claimTask(applicationContext);
-        System.out.println("任务分配--- ");
-
-        // step 5 查询个人任务列表
-        t.queryPersonalTaskList(applicationContext);
-        System.out.println("个人任务列表--- ");
-
-        // step 6 完成任务
-        t.completePersonalTask(applicationContext);
-        System.out.println("任务完成--- ");
+//        // step 5 查询个人任务列表
+//        t.queryPersonalTaskList(applicationContext);
+//        System.out.println("个人任务列表--- ");
+//
+//        // step 6 完成任务
+//        t.completePersonalTask(applicationContext);
+//        System.out.println("任务完成--- ");
 
         // step 7 查询历史流程信息
         t.queryHistoryProcessInstance(applicationContext);
@@ -128,8 +128,8 @@ public class ProcessTest {
         TaskService taskService = (TaskService) applicationContext.getBean("taskService");
 
         // 查询 fozzie用户个人任务列表并完成其任务
-        List<Task> tasks = taskService.createTaskQuery().taskAssignee("fozzie").list();
-
+        //List<Task> tasks = taskService.createTaskQuery().taskAssignee("fozzie").list();
+        List<Task> tasks = taskService.createTaskQuery().processDefinitionKey("financialReport").list();
         // 完成用户任务
         for (Task task : tasks) {
             System.out.println("完成任务名称:" + task.getName());
@@ -151,6 +151,10 @@ public class ProcessTest {
 
         for (HistoricProcessInstance historicProcessInstance : historicProcessInstances) {
             System.out.println("流程结束时间: " + historicProcessInstance.getEndTime());
+            System.out.println(historicProcessInstance.getBusinessKey());
         }
+
+
+
     }
 }

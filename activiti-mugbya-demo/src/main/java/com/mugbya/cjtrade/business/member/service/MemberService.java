@@ -19,17 +19,15 @@ public interface MemberService {
 
     void saveMember(Member member);
 
-    /**
-     * 返回给定id的member
-     * @param memberId
-     * @return
-     */
     Member getMember(String memberId);
 
     List<Member> getAllMember();
 
     List<Member> UsertaskList(Dto dto, HttpServletRequest request);
 
-    void handlerTask(String taskId, String userId);
+    void handlerTask(String taskId, String userId, Boolean variables);
 
+    void handlerTask(String taskId, String userId, Boolean variables, String reason);
+
+    void reApply(Member member , String taskId, String userId, Boolean variables);
 }

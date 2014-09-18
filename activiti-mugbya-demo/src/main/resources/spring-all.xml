@@ -53,12 +53,17 @@
         <property name="basePackage" value="com.mugbya.cjtrade.business.member.dao"/>
     </bean>
 
+    <!-- 引擎内部提供的UUID生成器，依赖fastxml的java-uuid-generator模块 -->
+    <bean id="uuidGenerator" class="org.activiti.engine.impl.persistence.StrongUuidGenerator" />
+
     <!--开始 -->
     <bean id="processEngineConfiguration" class="org.activiti.spring.SpringProcessEngineConfiguration">
         <property name="dataSource" ref="dataSource" />
         <property name="transactionManager" ref="transactionManager" />
         <property name="databaseSchemaUpdate" value="true" />
         <property name="jobExecutorActivate" value="false" />
+        <!-- UUID作为主键生成策略-->
+        <property name="idGenerator" ref="uuidGenerator" />
     </bean>
 
     <bean id="processEngine" class="org.activiti.spring.ProcessEngineFactoryBean">
@@ -66,13 +71,9 @@
     </bean>
 
     <bean id="repositoryService" factory-bean="processEngine" factory-method="getRepositoryService" />
-
     <bean id="runtimeService" factory-bean="processEngine" factory-method="getRuntimeService" />
-
     <bean id="taskService" factory-bean="processEngine" factory-method="getTaskService" />
-
     <bean id="historyService" factory-bean="processEngine" factory-method="getHistoryService" />
-
     <bean id="formService" factory-bean="processEngine" factory-method="getFormService"/>
     <bean id="identityService" factory-bean="processEngine" factory-method="getIdentityService"/>
 

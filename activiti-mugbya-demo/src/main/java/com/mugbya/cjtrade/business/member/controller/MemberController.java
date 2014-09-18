@@ -6,6 +6,7 @@ import com.mugbya.core.collection.BaseDto;
 import com.mugbya.core.collection.Dto;
 import com.mugbya.core.common.CommonController;
 import com.mugbya.core.utils.WebUtil;
+import org.activiti.engine.IdentityService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
@@ -23,17 +24,20 @@ public class MemberController extends CommonController {
     @Resource
     private MemberService memberService;
 
+    @Resource
+    private IdentityService identityService;
+
     @RequestMapping(value = "member/start.json")
     public void applyMember(Member member,HttpServletRequest request){
         System.out.println(member);
         String applyUser =  WebUtil.getLoginUser(request).getUsername();
 
-        //或者将申请人放在业务表单中
-        //member.setApplyUser(applyUser);
+        // 设置申请人 (第一种方式)
+        identityService.setAuthenticatedUserId(applyUser);
 
-        // 设置申请人
+        // 设置申请人 （第二种方式）
         Map<String ,Object> variables = new HashMap<>();
-        variables.put("applyUser",applyUser);
+//        variables.put("applyUser",applyUser);
 
         memberService.start( member, variables);
     }
@@ -45,15 +49,39 @@ public class MemberController extends CommonController {
     }
 
     @RequestMapping(value = "member/handler.json")
-    public void handler(String taskId, String userId){
-        //System.out.println(taskId + " 噢噢噢噢 "+  userId);
-        memberService.handlerTask(taskId, userId);
+    public void handler(String taskId, String userId, Boolean variables, String reason){
+        //System.out.println(reason);
+        memberService.handlerTask(taskId, userId, variables,reason);
     }
+
+    /**
+     * 不带理由的处理
+     * @param taskId
+     * @param userId
+     * @param variables
+     */
+    @RequestMapping(value = "member/handlerNoReason.json")
+    public void handler(String taskId, String userId, Boolean variables){
+
+        memberService.handlerTask(taskId, userId, variables);
+    }
+
+    /**
+     * 调整申请
+     */
+    @RequestMapping(value = "member/reSubmit.json")
+    public void revision(Member member , String taskId, String userId, Boolean variables){
+        System.out.println(member);
+
+        memberService.reApply(member, taskId, userId, variables);
+
+    }
+
 
     /**
      * 得到审批成功的member
      */
-    @RequestMapping(value = "member/add.jon")
+    @RequestMapping(value = "member/all.json")
     public void getMemberAll(String pro){
          memberService.getAllMember();
     }

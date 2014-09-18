@@ -36,17 +36,19 @@ public class LeaveProcessTest {
 
         LeaveProcessTest leaveProcessTest = new LeaveProcessTest();
 
-        // step1 部署流程
-        leaveProcessTest.deploymentInstance(applicationContext);
-        System.out.println("部署------");
+//        // step1 部署流程
+//        leaveProcessTest.deploymentInstance(applicationContext);
+//        System.out.println("部署------");
+//
+//        // step2 启动流程实例
+//        leaveProcessTest.startInstance(applicationContext);
+//        System.out.println("启动流程实例--------");
+//
+//        // step3 查询用户任务
+//        leaveProcessTest.queryUserTask(applicationContext);
+//        System.out.println("查询用户任务----");
 
-        // step2 启动流程实例
-        leaveProcessTest.startInstance(applicationContext);
-        System.out.println("启动流程实例--------");
-
-        // step3 查询用户任务
-        leaveProcessTest.queryUserTask(applicationContext);
-        System.out.println("查询用户任务----");
+        leaveProcessTest.handler(applicationContext);
 
         // 查询当前流程历史任务
         leaveProcessTest.queryHistoryProcessInstance(applicationContext);
@@ -111,19 +113,30 @@ public class LeaveProcessTest {
         }
     }
 
+    public void handler(ClassPathXmlApplicationContext applicationContext){
+        TaskService taskService = (TaskService) applicationContext.getBean("taskService");
+
+        List<Task> taskList = taskService.createTaskQuery().processDefinitionKey("myProcess").list();
+
+        System.out.println(taskList.size());
+
+        for (Task task : taskList){
+            taskService.complete(task.getId());
+        }
+    }
+
     // 查询历史流程信息,也许你在查询的时候这个任务没有结束
     // 那么请你将management组的任务claimTask分配给用户然后completePersonalTask完成任务
     // 这个流程实例就算完成了,你在这里也才会查询出来,否则流程实例没有到达
+
     public void queryHistoryProcessInstance(ClassPathXmlApplicationContext applicationContext) {
-        // 获取historyService
+
         HistoryService historyService = (HistoryService) applicationContext.getBean("historyService");
-        // 在这里需要注意的是,你的financialReport流程如果启动多个,singleResult将会出错
-        // 由于这里是测试我很清除这个实例只启动了一个,所以使用singleResult方法,如果你在测试时候需要注意
-        List<HistoricProcessInstance> historicProcessInstances = historyService.createHistoricProcessInstanceQuery().processDefinitionKey("myProcess").list();
-        for (HistoricProcessInstance historicProcessInstance : historicProcessInstances) {
-            logger.debug("流程结束时间: " + historicProcessInstance.getEndTime());
-            System.out.println("流程结束时间: " + historicProcessInstance.getEndTime());
-        }
+
+        List<HistoricProcessInstance> historicProcessInstances =
+                historyService.createHistoricProcessInstanceQuery().processDefinitionKey("myProcess").list();
+
+        System.out.println(historicProcessInstances);
     }
 
 }

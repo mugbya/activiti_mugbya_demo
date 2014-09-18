@@ -14,6 +14,7 @@ import org.activiti.engine.task.Task;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -95,7 +96,21 @@ public class ProcessEngineCore {
      * @return
      */
     public Object getApplyUser(String  taskId){
-        return  taskService.getVariable(taskId,"applyUser");      
+        return  taskService.getVariable(taskId,"initiator");
+//        return  taskService.getVariable(taskId,"applyUser");
+    }
+
+    /**
+     * 得到驳回理由
+     * @param taskId
+     * @return
+     */
+    public String  getReason(String  taskId){
+        Object reason = taskService.getVariable(taskId,"reason");
+        if (reason != null){
+            return reason.toString();
+        }
+        return null;
     }
 
     /**
@@ -126,20 +141,58 @@ public class ProcessEngineCore {
 
     /**
      * 处理任务
-     *
      * @param taskId
      * @param userId
      */
     public void handlerUserTask(String taskId, String userId) {
-
         List<Task> tasks = taskService.createTaskQuery().taskAssignee(userId).list();
-
         for (Task task : tasks) {
             if (taskId.equals(task.getId())){
                 taskService.complete(task.getId());
             }
         }
+    }
 
+    /**
+     * 处理任务
+     * @param taskId
+     * @param userId
+     */
+    public void handlerUserTask(String taskId, String userId,Boolean variables) {
+
+        List<Task> tasks = taskService.createTaskQuery().taskAssignee(userId).list();
+        Map<String ,Object> var = new HashMap<>();
+        var.put("reApply",variables);
+
+        for (Task task : tasks) {
+            if (taskId.equals(task.getId())){
+                taskService.complete(task.getId(), var);
+            }
+        }
+    }
+
+    /**
+     * 处理任务
+     * @param taskId
+     * @param userId
+     */
+    public void handlerUserTask(String taskId, String userId,Boolean variables, String reason) {
+
+        List<Task> tasks = taskService.createTaskQuery().taskAssignee(userId).list();
+
+//        if (variables)
+
+        Map<String ,Object> var = new HashMap<>();
+        var.put("mugbyaPass",variables);
+        if (reason != null){
+            var.put("reason",reason);
+        }
+
+        for (Task task : tasks) {
+            if (taskId.equals(task.getId())){
+                taskService.complete(task.getId(), var);
+            }
+        }
     }
 
     /**
@@ -177,12 +230,13 @@ public class ProcessEngineCore {
         return false;
     }
 
-//    /**
-//     * 得到所有的启动的进程实例
-//     */
-//    public ProcessInstance getAllProcessInstance(){
-//
-//    }
+    /**
+     * 得到所有的结束的进程实例
+     */
+    public List<HistoricProcessInstance> getAllProcessInstance(){
+         return  historyService.createHistoricProcessInstanceQuery().
+                 processDefinitionKey("activitiDemo_v3").finished().
+                 orderByProcessInstanceEndTime().desc().list();
 
-
+    }
 }
