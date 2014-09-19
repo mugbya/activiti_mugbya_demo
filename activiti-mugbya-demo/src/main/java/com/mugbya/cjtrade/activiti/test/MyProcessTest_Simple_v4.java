@@ -36,26 +36,26 @@ public class MyProcessTest_Simple_v4 {
 //        // step 3 查看该流程下的所有任务列表
 //        t.taskAll(applicationContext);
 //
-//        // step 4 以mugbya账户处理任务
-//        t.completePersonalTaskbyMugbya(applicationContext);
-//        System.out.println("任务完成--- ");
+        // step 4 以mugbya账户处理任务
+        t.completePersonalTaskbyMugbya(applicationContext);
+        System.out.println("任务完成--- ");
 //
 //        // step 5 查看该流程下的所有任务列表
 //        t.taskAll(applicationContext);
 //
-//        // step 6 以yeats账户处理任务
-//        t.completePersonalTaskbyYeats(applicationContext);
-//        System.out.println("任务完成--- ");
+        // step 6 以yeats账户处理任务
+        t.completePersonalTaskbyYeats(applicationContext);
+        System.out.println("任务完成--- ");
 //
 //        t.taskAll(applicationContext);
 
         // 处理調整申请
-//        t.modifyApply(applicationContext);
+        t.modifyApply(applicationContext);
 
         //得到审批成功的会员信息
         // 得到所有的结束的流程
-        t.getFinishedAllProcessInstance(applicationContext);
-        System.out.println("结束的流程");
+//        t.getFinishedAllProcessInstance(applicationContext);
+//        System.out.println("结束的流程");
 
     }
 
@@ -113,8 +113,11 @@ public class MyProcessTest_Simple_v4 {
 
         List<Task> taskList = taskService.createTaskQuery().taskAssignee("yeats").list();
 
+        Map<String ,Object> variables = new HashMap<>();
+        variables.put("reApply", false);
+
         for (Task task : taskList) {
-            taskService.complete(task.getId());
+            taskService.complete(task.getId(),variables);
         }
     }
 

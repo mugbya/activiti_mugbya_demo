@@ -45,7 +45,10 @@ Ext.define("YCTrade.module.process.personal.WindowManager",{
             items: ['->', {
                 text: '同意',
                 handler: function() {
-                    this.fireEvent('agree');
+                    this.fireEvent('agree',{
+                        value : true,
+                        reason : null
+                    });
                 },
                 scope: this
             }, {
@@ -123,7 +126,8 @@ Ext.define("YCTrade.module.process.personal.WindowManager",{
     handlerEnsure : function(params){
         //console.log(params);
         this.fireEvent('reject',{
-            data : params.data
+            reason : params.data,
+            value : false
         });
     }
 });

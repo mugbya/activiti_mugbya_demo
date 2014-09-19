@@ -35,6 +35,9 @@ public class MemberServiceImpl implements MemberService {
     @Resource
     private ProcessEngineCore processEngineCore;
 
+    @Resource
+    private MemberWorkflowService memberWorkflowService;
+
     @Override
     public void start(Member member, Map<String, Object> variables) {
 
@@ -43,7 +46,7 @@ public class MemberServiceImpl implements MemberService {
 
         try {
             memberDao.save(member);
-            processEngineCore.startInstance("activitiDemo_v4", member.getMemberid(), variables);
+            memberWorkflowService.startProcess("activitiDemo_v4", member.getMemberid(), variables);
         } catch (Exception e) {
             System.out.println("异常 : " + e);
         }
@@ -61,18 +64,19 @@ public class MemberServiceImpl implements MemberService {
 
         String userId = WebUtil.getLoginUser(request).getUsername();
         // 根据当前人的ID查询代办任务
-        List<Task> taskList = processEngineCore.queryTaskList(userId);
+        List<Task> taskList = memberWorkflowService.taskList(userId);
         System.out.println("任务列表长度是 : " + taskList.size());
 
         // 根据流程的业务ID查询实体并关联
         for (Task task : taskList) {
-//            String processInstanceId = task.getProcessInstanceId();
-//            ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId).active().singleResult();
-//            String businessKey = processInstance.getBusinessKey();
             ProcessInstance processInstance = processEngineCore.queryProcessInstance(task.getProcessInstanceId());
             String businessKey = processInstance.getBusinessKey();
-            String applyUser = processEngineCore.getApplyUser(task.getId()).toString();
-            String reason = processEngineCore.getReason(task.getId());
+//            String applyUser = processEngineCore.getApplyUser(task.getId()).toString();
+//            String reason = processEngineCore.getReason(task.getId());
+
+            String applyUser = processEngineCore.getVariable(task.getId(),"initiator");
+            String mugbya_reason = processEngineCore.getVariable(task.getId(),"mugbya_reason");
+            String yeats_reason = processEngineCore.getVariable(task.getId(),"yeats_reason");
 
             if (businessKey == null) {
                 continue;
@@ -83,7 +87,11 @@ public class MemberServiceImpl implements MemberService {
             member.setAssignee(task.getAssignee());
             member.setTaskId(task.getId());
             member.setTaskName(task.getName());
-            member.setReason(reason);
+            if (yeats_reason != null){
+                member.setReason(yeats_reason);
+            }else {
+                member.setReason(mugbya_reason);
+            }
             members.add(member);
         }
 
@@ -91,28 +99,26 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void handlerTask(String taskId, String userId, Boolean variables) {
-        processEngineCore.handlerUserTask(taskId, userId, variables);
-    }
-
-
-    @Override
-    public void handlerTask(String taskId, String userId, Boolean variables, String reason) {
-        processEngineCore.handlerUserTask(taskId, userId, variables,reason);
+    public void handlerTask(String taskId, String userId, Boolean value, String reason) {
+        memberWorkflowService.handlerTask(taskId, userId, value, reason);
     }
 
     @Override
-    public void reApply(Member member, String taskId, String userId, Boolean variables) {
+    public void revision(Member member, String taskId, Boolean value) {
 
-        Member member1 = memberDao.getMemberById(member.getMemberid());
+        if (value == true){
+            Member member1 = memberDao.getMemberById(member.getMemberid());
 
-        member1.setMembername(member.getMembername());
-        member1.setMemberphone(member.getMemberphone());
-        member1.setMemberemail(member.getMemberemail());
-        member1.setDeptid(member.getDeptid());
-        memberDao.update(member1);
+            member1.setMembername(member.getMembername());
+            member1.setMemberphone(member.getMemberphone());
+            member1.setMemberemail(member.getMemberemail());
+            member1.setDeptid(member.getDeptid());
+            memberDao.update(member1);
+        }else {
+            // 删除member
+        }
 
-        processEngineCore.handlerUserTask(taskId, userId, variables);
+        memberWorkflowService.revision(taskId,  value);
     }
 
     @Override

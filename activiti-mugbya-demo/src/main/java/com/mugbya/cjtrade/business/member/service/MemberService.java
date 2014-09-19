@@ -25,9 +25,7 @@ public interface MemberService {
 
     List<Member> UsertaskList(Dto dto, HttpServletRequest request);
 
-    void handlerTask(String taskId, String userId, Boolean variables);
-
     void handlerTask(String taskId, String userId, Boolean variables, String reason);
 
-    void reApply(Member member , String taskId, String userId, Boolean variables);
+    void revision(Member member , String taskId,  Boolean variables);
 }

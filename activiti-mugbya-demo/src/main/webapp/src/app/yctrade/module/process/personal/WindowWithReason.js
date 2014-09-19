@@ -50,14 +50,18 @@ Ext.define("YCTrade.module.process.personal.WindowWithReason",{
             items: [{
                 text: '取消申请',
                 handler: function() {
-                    this.fireEvent('stop');
+                    this.fireEvent('revision',{
+                        data : false
+                    });
                     console.log("取消申请");
                 },
                 scope: this
             },'->', {
                 text: '提交',
                 handler: function() {
-                    this.fireEvent('reSubmit');
+                    this.fireEvent('revision',{
+                        data : true
+                    });
                     console.log("提交");
                 },
                 scope: this

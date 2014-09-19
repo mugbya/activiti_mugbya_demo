@@ -21,7 +21,7 @@ import java.util.Map;
 /**
  * @author mugbya
  * @version 2014-08-22.
- *  流程引擎核心类
+ *          流程引擎核心类
  */
 @Service("processEngineCore")
 public class ProcessEngineCore {
@@ -46,177 +46,50 @@ public class ProcessEngineCore {
     }
 
     /**
-     * 流程启动
-     * @param processInstanceByKey
-     * @return
-     */
-    public ProcessInstance startInstance(String processInstanceByKey) {
-        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processInstanceByKey);
-        System.out.println("process start success  key [" + processInstance.getId() + "]" );
-        return processInstance;
-    }
-
-    /**
-     * 流程启动 增加流程变量
-     * @param processInstanceByKey
-     * @param variables
-     * @return
-     */
-    public ProcessInstance startInstance(String processInstanceByKey, Map<String,Object> variables) {
-        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processInstanceByKey,variables);
-        System.out.println("process start success  key [" + processInstance.getId() + "]" );
-        return processInstance;
-    }
-
-    /**
      * 增加业务
+     *
      * @param processInstanceByKey
      * @param businessKey
      * @param variables
      * @return
      */
-    public ProcessInstance startInstance(String processInstanceByKey,  String businessKey, Map<String,Object> variables) {
+    public ProcessInstance startInstance(String processInstanceByKey, String businessKey, Map<String, Object> variables) {
         ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processInstanceByKey, businessKey, variables);
-        System.out.println("业务ID是  =  [" + processInstance.getBusinessKey() + "]" );
+        System.out.println("业务ID是  =  [" + processInstance.getBusinessKey() + "]");
         return processInstance;
     }
 
-    /**
-     * 得到流程实例
-     * @param processInstanceId
-     * @return
-     */
-    public ProcessInstance queryProcessInstance(String processInstanceId){
-        return runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId).active().singleResult();
-    }
-
-    /**
-     * 获取流程申请者
-     * @param taskId
-     * @return
-     */
-    public Object getApplyUser(String  taskId){
-        return  taskService.getVariable(taskId,"initiator");
-//        return  taskService.getVariable(taskId,"applyUser");
-    }
-
-    /**
-     * 得到驳回理由
-     * @param taskId
-     * @return
-     */
-    public String  getReason(String  taskId){
-        Object reason = taskService.getVariable(taskId,"reason");
-        if (reason != null){
-            return reason.toString();
-        }
-        return null;
-    }
-
-    /**
-     * 同名（key）下的所有任务
-     * @param key
-     * @return
-     */
-    public List<Task> taskList (String key){
-        List<Task> taskList = taskService.createTaskQuery().processDefinitionKey(key).list();
-        return  taskList;
-    }
-
-    /**
-     * 查询指定人的用户列表
-     * @param userName
-     * @return
-     */
-    public List<Task> queryUserTaskList(String userName) {
-        // 查询当前用户任务列表
-        List<Task> taskList = taskService.createTaskQuery().taskAssignee(userName).list();
-        System.out.println("当前用户的任务个数" + taskList.size());
-        return taskList;
-    }
-
-    public List<Task> queryTaskList(String userId){
+    public List<Task> queryTaskList(String userId) {
         return taskService.createTaskQuery().taskCandidateOrAssigned(userId).list();
     }
 
     /**
-     * 处理任务
-     * @param taskId
-     * @param userId
-     */
-    public void handlerUserTask(String taskId, String userId) {
-        List<Task> tasks = taskService.createTaskQuery().taskAssignee(userId).list();
-        for (Task task : tasks) {
-            if (taskId.equals(task.getId())){
-                taskService.complete(task.getId());
-            }
-        }
-    }
-
-    /**
-     * 处理任务
-     * @param taskId
-     * @param userId
-     */
-    public void handlerUserTask(String taskId, String userId,Boolean variables) {
-
-        List<Task> tasks = taskService.createTaskQuery().taskAssignee(userId).list();
-        Map<String ,Object> var = new HashMap<>();
-        var.put("reApply",variables);
-
-        for (Task task : tasks) {
-            if (taskId.equals(task.getId())){
-                taskService.complete(task.getId(), var);
-            }
-        }
-    }
-
-    /**
-     * 处理任务
-     * @param taskId
-     * @param userId
-     */
-    public void handlerUserTask(String taskId, String userId,Boolean variables, String reason) {
-
-        List<Task> tasks = taskService.createTaskQuery().taskAssignee(userId).list();
-
-//        if (variables)
-
-        Map<String ,Object> var = new HashMap<>();
-        var.put("mugbyaPass",variables);
-        if (reason != null){
-            var.put("reason",reason);
-        }
-
-        for (Task task : tasks) {
-            if (taskId.equals(task.getId())){
-                taskService.complete(task.getId(), var);
-            }
-        }
-    }
-
-    /**
-     * web用来处理任务
-     * @param taskId
-     */
-    public void handlerTask (String taskId){
-        taskService.complete(taskId);
-    }
-
-    /**
-     * 完成UserTask
      *
      * @param taskId 任务ID
-     * @param proMap 流程变量
+     * @param variables 流程变量
      */
-    public void completeUserTask(String taskId, Map<String, Object> proMap) {
-        if (proMap != null) {
-            taskService.complete(taskId, proMap);
-        } else {
+    public void handlerUserTask(String taskId, Map<String, Object> variables) {
+        if (variables != null){
+            taskService.complete(taskId, variables);
+        }else{
             taskService.complete(taskId);
         }
     }
 
+    /**
+     * 获取流程变量信息
+     *
+     * @param taskId      任务Id
+     * @param variableName 变量名
+     * @return 变量的值
+     */
+    public String getVariable(String taskId, String variableName) {
+        Object variableValue = taskService.getVariable(taskId, variableName);
+        if (variableValue != null) {
+            return variableValue.toString();
+        }
+        return null;
+    }
     /**
      * 根据流程ID查看流程是否结束
      *
@@ -233,10 +106,21 @@ public class ProcessEngineCore {
     /**
      * 得到所有的结束的进程实例
      */
-    public List<HistoricProcessInstance> getAllProcessInstance(){
-         return  historyService.createHistoricProcessInstanceQuery().
-                 processDefinitionKey("activitiDemo_v3").finished().
-                 orderByProcessInstanceEndTime().desc().list();
+    public List<HistoricProcessInstance> getAllProcessInstance() {
+        return historyService.createHistoricProcessInstanceQuery().
+                processDefinitionKey("activitiDemo_v3").finished().
+                orderByProcessInstanceEndTime().desc().list();
 
     }
+
+    /**
+     * 得到流程实例
+     *
+     * @param processInstanceId
+     * @return
+     */
+    public ProcessInstance queryProcessInstance(String processInstanceId) {
+        return runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId).active().singleResult();
+    }
+
 }

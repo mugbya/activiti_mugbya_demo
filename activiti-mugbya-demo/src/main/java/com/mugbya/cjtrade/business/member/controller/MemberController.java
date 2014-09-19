@@ -49,34 +49,21 @@ public class MemberController extends CommonController {
     }
 
     @RequestMapping(value = "member/handler.json")
-    public void handler(String taskId, String userId, Boolean variables, String reason){
-        //System.out.println(reason);
-        memberService.handlerTask(taskId, userId, variables,reason);
-    }
-
-    /**
-     * 不带理由的处理
-     * @param taskId
-     * @param userId
-     * @param variables
-     */
-    @RequestMapping(value = "member/handlerNoReason.json")
-    public void handler(String taskId, String userId, Boolean variables){
-
-        memberService.handlerTask(taskId, userId, variables);
+    public void handler(String taskId, String userId, Boolean value, String reason){
+        System.out.println(userId + "理由 ： " + reason);
+        memberService.handlerTask(taskId, userId, value,reason);
     }
 
     /**
      * 调整申请
      */
-    @RequestMapping(value = "member/reSubmit.json")
-    public void revision(Member member , String taskId, String userId, Boolean variables){
+    @RequestMapping(value = "member/revision.json")
+    public void revision(Member member , String taskId, Boolean value){
         System.out.println(member);
 
-        memberService.reApply(member, taskId, userId, variables);
+        memberService.revision(member, taskId,value);
 
     }
-
 
     /**
      * 得到审批成功的member

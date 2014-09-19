@@ -17,7 +17,6 @@ Ext.define("YCTrade.module.process.personal.HandlerProcess", {
         Ext.applyIf(this, {
             layout: 'border',
             items: [this.managerGrid]
-
         });
 
         this.callParent(arguments);
@@ -26,11 +25,10 @@ Ext.define("YCTrade.module.process.personal.HandlerProcess", {
     initCompo: function () {
         this.initManagerGrid();
         this.windowMember = Ext.create("YCTrade.module.process.personal.WindowManager");
-        this.windowMember.on('agree', this.agreeHandler, this);
-        this.windowMember.on('reject', this.rejectHandler, this);
+        this.windowMember.on('agree', this.goHandler, this);
+        this.windowMember.on('reject', this.goHandler, this);
         this.windowWithReason= Ext.create("YCTrade.module.process.personal.WindowWithReason");
-        this.windowWithReason.on('stop', this.stopHandler, this);
-        this.windowWithReason.on('reSubmit', this.reSubmitHandler, this);
+        this.windowWithReason.on('revision', this.revisionHandler, this);
     },
 
     initManagerGrid: function () {
@@ -135,8 +133,8 @@ Ext.define("YCTrade.module.process.personal.HandlerProcess", {
             params: {
                 taskId: rec.data.taskId,
                 userId: rec.data.assignee,
-                variables : true
-                //reason : null
+                variables : true,
+                reason : null
             },
             success: function (response) {
                 this.managerGrid.store.reload();
@@ -147,11 +145,11 @@ Ext.define("YCTrade.module.process.personal.HandlerProcess", {
     },
 
     /**
-     * 驳回
+     * 同意或者驳回的处理
      * @param params
      */
-    rejectHandler : function (params) {
-        var reason = params.data;
+    goHandler : function (params) {
+        console.log(params.reason);
         var rec = this.getRec();
         Ext.Ajax.request({
             url: 'member/handler.json',
@@ -159,8 +157,8 @@ Ext.define("YCTrade.module.process.personal.HandlerProcess", {
             params: {
                 taskId: rec.data.taskId,
                 userId: rec.data.assignee,
-                variables : false,
-                reason : reason
+                value : params.value,
+                reason : params.reason
             },
             success: function (response) {
                 this.managerGrid.store.reload();
@@ -172,16 +170,17 @@ Ext.define("YCTrade.module.process.personal.HandlerProcess", {
     },
 
     /**
-     * 重新申请
+     * 调整申请
      */
-    reSubmitHandler : function () {
+    revisionHandler : function (params) {
         var rec = this.getRec();
+        console.log(params.data);
         this.windowWithReason.MemberFormPanel.submit({
-            url : 'member/reSubmit.json',
+            url : 'member/revision.json',
             params: {
                 taskId: rec.data.taskId,
-                userId: rec.data.assignee,
-                variables : true
+                //userId: rec.data.assignee,
+                value : params.data
             },
             waitTitle: '提示',
             method: 'POST',
@@ -197,27 +196,6 @@ Ext.define("YCTrade.module.process.personal.HandlerProcess", {
                 console.log('失败');
                 Ext.MessageBox.alert('提示', '<center>提交 ---失败！</center>');
             }
-        });
-    },
-
-    /**
-     * 停止流程
-     */
-    stopHandler : function () {
-        var rec = this.getRec();
-        Ext.Ajax.request({
-            url: 'member/handlerNoReason.json',
-            //url : 'member/revision.json',
-            params: {
-                taskId: rec.data.taskId,
-                userId: rec.data.assignee,
-                variables : false
-            },
-            success: function (response) {
-                this.managerGrid.store.reload();
-                this.windowWithReason.close();
-            },
-            scope: this
         });
     }
 
